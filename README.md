@@ -32,7 +32,7 @@ weave-clanmgmt is a shell script that leverages etcd stored data to allow you to
 is very simple and is a constant work in progress right now.  It is pre-seeded with the seedclandata.sh file loaded via a systemd unit from cloud-init at boot-time. The default configuration has three clans: 1=dev, 2=test, 3=prod.
 
 ### How do I use it?
-The following instructions will create two new c-lans and two new networks inside them on the two-node setup
+The following instructions will create a new c-lan and a new network inside it on the cluster.
 
 First - login to core-01 and create your new c-lan:
 ```
@@ -90,6 +90,7 @@ PING 172.16.0.41 (172.16.0.41) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.999/1.723/2.991/0.900 ms
 core@core-02 ~/weave-clanmgmt $ 
 ```
+It works.  Now log into core-03 and do the same thing.  You are up and running cluster-wide.
 
 ---
 ## Installation for default 3-node setup on AWS
