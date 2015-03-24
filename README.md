@@ -21,7 +21,7 @@ Cloud.  Lan.  VLAN.  CLAN?
 
 My weave-clanmgmt work is in its infancy but resides [here](https://github.com/gonkulator/weave-clanmgmt) 
 
-In a nutshell, what this does is it allows you to define weave "C-LANS" that can then be attached to the hosting coreos platform (and to docker containers running inside the coreos nodes) via
+In a nutshell, what this does is it allows you to define weave "C-LANS" that can then be attached to the hosting platform (and to docker containers running inside the nodes) via
 arbitrary human-meaningful names.  Want a cluster member to be reachable on the "dev" clan?  Attach it.  Want all the members to be on the "backend" clan?  Attach them.  Want to remove some cluster
 members from the "prod" clan?  Detach them. 
 
@@ -29,7 +29,7 @@ It also includes a dhcp-like functionality in which you can create network defin
 
 ### What is it?
 weave-clanmgmt is a shell script that leverages etcd stored data to allow you to create c-lans on the weave network that your coreos cluster members can join and leave as necessary.  The data structure in etcd
-is very simple and is a constant work in progress right now.  
+is very simple and is a constant work in progress right now.  It is pre-seeded with the seedclandata.sh file loaded via a systemd unit from cloud-init at boot-time. The default configuration has three clans: 1=dev, 2=test, 3=prod.
 
 ### How do I use it?
 The following instructions will create two new c-lans and two new networks inside them on the two-node setup
