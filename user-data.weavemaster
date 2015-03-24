@@ -35,7 +35,7 @@ coreos:
       Name=weave*
 
       [Network]
-  - name: install-weave-vlan-mgmt.service
+  - name: install-weave-clan-mgmt.service
     command: start
     enable: true
     content: |
@@ -44,7 +44,7 @@ coreos:
       After=network-online.target
       After=docker.service
       After=etcd.service
-      Description=Install weave-vlan-mgmt
+      Description=Install weave-clan-mgmt
       Documentation=https://github.com/gonkulator/weave-clanmgmt
       Requires=network-online.target
       Requires=docker.service
@@ -54,15 +54,15 @@ coreos:
       RemainAfterExit=yes
       ExecStartPre=/bin/echo Pulling weave-clanmgmt from github...
       ExecStartPre=/usr/bin/git clone https://github.com/gonkulator/weave-clanmgmt /home/core/weave-clanmgmt
-      ExecStartPre=/bin/echo Seeding vlan data...
-      ExecStartPre=/home/core/weave-clanmgmt/seedvlandata.sh
-      ExecStart=/bin/echo weave-vlan-mgmt Installed
-  - name: join-weavevlans.service
+      ExecStartPre=/bin/echo Seeding clan data...
+      ExecStartPre=/home/core/weave-clanmgmt/seedclandata.sh
+      ExecStart=/bin/echo weave-clan-mgmt Installed
+  - name: join-weaveclans.service
     command: start
     enable: true
     content: |
       [Unit]
-      After=install-weave-vlan-mgmt.service
+      After=install-weave-clan-mgmt.service
       After=weave.service
       Requires=network-online.target
       Requires=docker.service
