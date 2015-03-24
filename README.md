@@ -1,2 +1,2 @@
-# weave-vlan-testplatfom
+# weave-clan-testplatfom
 Test rig for weave-clanmgmt
