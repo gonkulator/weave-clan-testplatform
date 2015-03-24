@@ -17,11 +17,12 @@ I have taken it and added support for the following:
 
 ## Weave C-LANS
 
-Cloud-LANS.
+Cloud.  Lan.  VLAN.  CLAN?
 
-This project includes an early project im working on: weave-clanmgmt.  My weave-clanmgmt work is in its infancy but resides [here](https://github.com/gonkulator/weave-clanmgmt) 
+My weave-clanmgmt work is in its infancy but resides [here](https://github.com/gonkulator/weave-clanmgmt) 
+
 In a nutshell, what this does is it allows you to define weave "C-LANS" that can then be attached to the hosting coreos platform (and to docker containers running inside the coreos nodes) via
-arbitrary human-meaningful names.  Cloud.  Lan.  VLAN.  CLAN?  Want a cluster member to be reachable on the "dev" clan?  Attach it.  Want all the members to be on the "backend" clan?  Attach them.  Want to remove some cluster 
+arbitrary human-meaningful names.  Want a cluster member to be reachable on the "dev" clan?  Attach it.  Want all the members to be on the "backend" clan?  Attach them.  Want to remove some cluster
 members from the "prod" clan?  Detach them. 
 
 It also includes a dhcp-like functionality in which you can create network definitions and store them in the etcd store as well.  So you can create c-lans, add networks to them, and then attach hosts/containers to those c-lans anywhere on your cluster.  When you attach you are given an available ip out of the pool you defined for your network.  When you detach from the c-lan, it returns the ip to the pool.
