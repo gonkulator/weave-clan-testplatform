@@ -3,7 +3,7 @@
 ---
 coreos:
   etcd:
-    discovery: https://discovery.etcd.io/05ecc907666d6eb0bd1be34ceda23742
+    discovery: https://discovery.etcd.io/244c3e45b47518341081d11684798c5d
     addr: $public_ipv4:4001
     peer-addr: $public_ipv4:7001
   fleet:
@@ -45,14 +45,14 @@ coreos:
       After=docker.service
       After=etcd.service
       Description=Install weave-vlan-mgmt
-      Documentation=https://github.com/gonkulator/weave-vlanmgmt
+      Documentation=https://github.com/gonkulator/weave-clanmgmt
       Requires=network-online.target
       Requires=docker.service
 
       [Service]
       Type=oneshot
       RemainAfterExit=yes
-      ExecStartPre=/usr/bin/git clone https://github.com/gonkulator/weave-vlanmgmt /home/core/weave-vlanmgmt
+      ExecStartPre=/usr/bin/git clone https://github.com/gonkulator/weave-clanmgmt /home/core/weave-clanmgmt
       ExecStart=/bin/echo Weave vlan-mgmt Installed
   - name: install-weave.service
     command: start
@@ -86,7 +86,7 @@ coreos:
       Requires=weave.service
 
       [Service]
-      ExecStart=/home/core/weave-vlanmgmt/weave-vlanmgmt attach dev
+      ExecStart=/home/core/weave-clanmgmt/weave-clanmgmt attach dev
   - name: weave.service
     command: start
     enable: true

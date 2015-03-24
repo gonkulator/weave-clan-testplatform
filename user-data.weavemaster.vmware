@@ -3,7 +3,7 @@
 ---
 coreos:
   etcd:
-    discovery: https://discovery.etcd.io/05ecc907666d6eb0bd1be34ceda23742
+    discovery: https://discovery.etcd.io/244c3e45b47518341081d11684798c5d
     addr: $private_ipv4:4001
     peer-addr: $private_ipv4:7001
   fleet:
@@ -45,7 +45,7 @@ coreos:
       After=docker.service
       After=etcd.service
       Description=Install weave-vlan-mgmt
-      Documentation=https://github.com/gonkulator/weave-vlanmgmt
+      Documentation=https://github.com/gonkulator/weave-clanmgmt
       Requires=network-online.target
       Requires=docker.service
       Requires=etcd.service
@@ -54,10 +54,10 @@ coreos:
       [Service]
       Type=oneshot
       RemainAfterExit=yes
-      ExecStartPre=/bin/echo Pulling weave-vlanmgmt from github...
-      ExecStartPre=/usr/bin/git clone https://github.com/gonkulator/weave-vlanmgmt /home/core/weave-vlanmgmt
+      ExecStartPre=/bin/echo Pulling weave-clanmgmt from github...
+      ExecStartPre=/usr/bin/git clone https://github.com/gonkulator/weave-clanmgmt /home/core/weave-clanmgmt
       ExecStartPre=/bin/echo Seeding vlan data...
-      ExecStartPre=/home/core/weave-vlanmgmt/seedvlandata.sh
+      ExecStartPre=/home/core/weave-clanmgmt/seedvlandata.sh
       ExecStart=/bin/echo weave-vlan-mgmt Installed
   - name: join-weavevlans.service
     command: start
@@ -71,7 +71,7 @@ coreos:
       Requires=weave.service
 
       [Service]
-      ExecStart=/home/core/weave-vlanmgmt/weave-vlanmgmt attach dev
+      ExecStart=/home/core/weave-clanmgmt/weave-clanmgmt attach dev
   - name: install-weave.service
     command: start
     enable: true
