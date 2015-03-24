@@ -1,0 +1,118 @@
+#cloud-config
+
+---
+coreos:
+  etcd:
+    discovery: https://discovery.etcd.io/05ecc907666d6eb0bd1be34ceda23742
+    addr: $private_ipv4:4001
+    peer-addr: $private_ipv4:7001
+  fleet:
+    public-ip: $private_ipv4
+  units:
+  - name: etcd.service
+    command: start
+  - name: fleet.service
+    command: start
+  - name: docker-tcp.socket
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      Description=Docker Socket for the API
+
+      [Socket]
+      ListenStream=2375
+      Service=docker.service
+      BindIPv6Only=both
+
+      [Install]
+      WantedBy=sockets.target
+  - name: 10-weave.network
+    runtime: false
+    content: |
+      [Match]
+      Type=bridge
+      Name=weave*
+
+      [Network]
+  - name: install-weave-vlan-mgmt.service
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      After=weave.service
+      After=network-online.target
+      After=docker.service
+      After=etcd.service
+      Description=Install weave-vlan-mgmt
+      Documentation=https://github.com/gonkulator/weave-vlanmgmt
+      Requires=network-online.target
+      Requires=docker.service
+      Requires=etcd.service
+      Requires=weave.service
+
+      [Service]
+      Type=oneshot
+      RemainAfterExit=yes
+      ExecStartPre=/bin/echo Pulling weave-vlanmgmt from github...
+      ExecStartPre=/usr/bin/git clone https://github.com/gonkulator/weave-vlanmgmt /home/core/weave-vlanmgmt
+      ExecStartPre=/bin/echo Seeding vlan data...
+      ExecStartPre=/home/core/weave-vlanmgmt/seedvlandata.sh
+      ExecStart=/bin/echo weave-vlan-mgmt Installed
+  - name: join-weavevlans.service
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      After=install-weave-vlan-mgmt.service
+      After=weave.service
+      Requires=network-online.target
+      Requires=docker.service
+      Requires=weave.service
+
+      [Service]
+      ExecStart=/home/core/weave-vlanmgmt/weave-vlanmgmt attach dev
+  - name: install-weave.service
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      After=network-online.target
+      After=docker.service
+      After=etcd.service
+      Description=Install Weave
+      Documentation=http://zettio.gihub.io/weave
+      Requires=network-online.target
+      Requires=docker.service
+
+      [Service]
+      Type=oneshot
+      RemainsAfterExit=yes
+      ExecStartPre=/usr/bin/wget -N -P /opt/bin https://raw.github.com/zettio/weave/master/weave
+      ExecStartPre=/usr/bin/chmod +x /opt/bin/weave
+      ExecStartPre=/usr/bin/docker pull zettio/weave:latest
+      ExecStart=/bin/echo Weave Installed
+  - name: weave.service
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      After=install-weave.service
+      Description=Weave Network
+      Documentation=http://zettio.github.io/weave
+      Requires=install-weave.service
+
+      [Service]
+      EnvironmentFile=/etc/environment
+      ExecStartPre=/opt/bin/weave launch
+      ExecStartPre=/usr/bin/etcdctl mkdir /weave/servers
+      ExecStartPre=/usr/bin/etcdctl mk /weave/servers/master ${COREOS_PUBLIC_IPV4}
+      ExecStart=/usr/bin/docker logs -f weave
+      SuccessExitStatus=2
+      ExecStop=/opt/bin/weave stop
+write_files:
+- path: /etc/weave.env
+  permissions: 420
+  owner: root
+  content: |
+    WEAVE_LAUNCH_ARGS="IMAMASTER!"
