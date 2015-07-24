@@ -1,3 +1,6 @@
+### THIS PROJECT HAS BEEN DEPRECATED - BECAUSE, WEAVE IPAM
+
+
 If you don't know what Weave is, read about it [here](https://github.com/zettio/weave).
 
 _NOTE:_ This was originally a fork of [@lukebond's coreos-vagrant fork](https://github.com/lukebond/coreos-vagrant-weave).  
